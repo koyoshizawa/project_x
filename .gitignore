@@ -1,0 +1,13 @@
+# files to ignore
+settings.py
+const.py
+
+# extensions to ignore
+*.log
+*.pot
+*.pyc
+*.sqlite3
+
+# directories to ignore
+.idea/
+.DS_Store

@@ -1,0 +1,55 @@
+{% extends 'common/base.html' %}
+
+{% block title %}chart{%endblock%}
+
+{% block extra_static %}
+{% load static %}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'chart/chart.css' %}" />
+<script type="text/javascript" src="{% static 'chart/chart.js' %}"></script>
+{%endblock%}
+
+{% block content %}
+<!--チャート-->
+<div id="line-graph">
+    <!--チャートに表示する期間の入力-->
+    <div id="line-graph-input">
+        <form class="form-horizontal form-inline" id="line-graph-form">
+            <div class="form-group col-sm-4">
+                <label>from：<input type="date" id="date-from" class="form-control" name="date-from"></label>
+
+            </div>
+            <div class="form-group col-sm-3">
+                <label>to：<input type="date" id="date-to" class="form-control" name="date-to"></label>
+
+            </div>
+            <div class="form-group col-sm-2">
+                <label>間隔：
+                    <select id="freq" class="form-control" name="granularity">
+                        {% for freq in freq_options %}
+                        <option>{{ freq }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </div>
+            <div class="form-group col-sm-1">
+                <select id="currency-pair" name="instrument">
+                    {% for currency in currency_pair %}
+                    <option>{{ currency }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-sm-1" style="padding-left:50px">
+                <button id="update-btn" class="btn btn-primary">表示</button>
+            </div>
+        </form>
+
+    </div>
+    <canvas id="line-graph-canvas" class="chart-container" style="position: relative; width: 400px;"></canvas>
+</div>
+
+<div id="bar-graph">
+    <canvas id="bar-graph-canvas"></canvas>
+</div>
+
+{%endblock%}
