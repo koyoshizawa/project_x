@@ -1,2 +1,2 @@
 # project_x
-fxトレーディングのためのwebアプリ
+Web application for fx trading.
