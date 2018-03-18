@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 from datetime import datetime
 import oandapy
@@ -8,14 +7,14 @@ from util.util import FormatDatetime
 from util.util import TechnicalIndex
 
 
-class Agent(object):
+class BaseAgent(object):
 
     def __init__(self, from_datetime: datetime, to_datetime: datetime, granularity: str, instrument: str):
         self.ASSET = 100000
         self.NO_POSITION = 0
         self.LONG_POSITION = 1
         self.SHORT_POSITION = 2
-        self.DIFF_PRICE = 0.30   #価格差30pipsで利確or損切
+        self.DIFF_PRICE = 0.10   #価格差30pipsで利確or損切
         self.UNIT = 10000  # 通貨単位
         self.from_datetime = from_datetime  # 開始日時
         self.to_datetime = to_datetime  # 終了日時
@@ -24,48 +23,9 @@ class Agent(object):
         self.__get_fx_data()
         self.__format_fx_data_to_data_frame()
 
-    def backtest(self, spread=2, lots=0.1):
-        """
-        backtestの実行
-
-        DIFF_PRICE以上の変化があったら強制的に損切りor利確
-        :return:
-        """
-
-        have_position = self.NO_POSITION
-        order_price = 0
-        count_win = 0
-        count_lose = 0
-        asset = self.ASSET
-
-        result = []
-
-        # bollinger_band取得
-        upper_sigma, lower_sigma = TechnicalIndex.get_bollinger_band(self.data_frame['openMid'], window=25, deviation=2)
-
-        for i, rate in enumerate(self.data_frame['openMid']):
-
-            if have_position == self.NO_POSITION:
-                if rate >= upper_sigma[i]:
-                    # 売り注文
-                    have_position, order_price = self.__open_order(rate, self.SHORT_POSITION)
-                elif rate <= lower_sigma[i]:
-                    # 買い注文
-                    have_position, order_price = self.__open_order(rate, self.LONG_POSITION)
-
-            else:
-                # 利益確定 or 損切り
-                if abs(order_price - rate) > self.DIFF_PRICE:
-                    have_position, order_price, count_win, count_lose, asset = \
-                        self.__close_order(rate, order_price, have_position, count_win, count_lose, asset)
-
-            # 資産状態をリストに保持
-            result.append(asset)
-
-        return result, count_win, count_lose
 
 
-    def __open_order(self, price, order_type):
+    def open_order(self, price, order_type):
 
         have_position = order_type
         order_price = price
@@ -73,7 +33,7 @@ class Agent(object):
         return have_position, order_price
 
 
-    def __close_order(self, price, order_price, have_position, count_win, count_lose, asset):
+    def close_order(self, price, order_price, have_position, count_win, count_lose, asset):
 
         if have_position == self.LONG_POSITION:
             diff_price = price - order_price

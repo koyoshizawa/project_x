@@ -59,7 +59,7 @@ $(function(){
         }
 
 
-        $.ajax('get_selected_fx_data/',{
+        $.ajax('exec_back_test/',{
             type: 'post',
             cache: false,
             data: input_data_dict

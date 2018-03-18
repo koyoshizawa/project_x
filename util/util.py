@@ -50,10 +50,6 @@ class TechnicalIndex(object):
         # シグマの計算
         sigma = pandas.Series.rolling(data, window=window).std(ddof=0)
 
-
-        print('aaaaaa')
-        print(base)
-        print(sigma)
         upper_sigma = base + sigma**deviation
         lower_sigma = base - sigma**deviation
 

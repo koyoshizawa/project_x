@@ -55,14 +55,3 @@ def get_selected_fx_data(request):
     price_list = [d['openMid'] for d in response['candles']]
     return HttpResponse(json.dumps({'time':time_list, 'price':price_list}))
 
-from strategy.simple_bollinger_band import Agent
-
-def test_view(request):
-
-    from_datetime = datetime(2010, 1, 1)
-    to_datetime = datetime(2011, 1, 1)
-
-    agent = Agent(from_datetime, to_datetime, 'D', 'USD_JPY')
-    result, count_win, count_lose = agent.backtest()
-
-    return HttpResponse('勝ち'+str(count_win)+'負け'+str(count_lose))
