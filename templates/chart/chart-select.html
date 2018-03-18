@@ -13,14 +13,15 @@
 <!--チャート-->
 <div id="line-graph">
     <!--チャートに表示する期間の入力-->
-    <div id="line-graph-input">
-        <form class="form-horizontal form-inline" id="line-graph-form">
+    <div id="line-graph-input" class="row">
+        <form id="line-graph-form" class="form-horizontal form-inline col-sm-10">
+            {% csrf_token %}
             <div class="form-group col-sm-4">
-                <label>from：<input type="date" id="date-from" class="form-control" name="date-from"></label>
+                <label>from：<input type="date" id="date_from" class="form-control" name="date_from" required></label>
 
             </div>
             <div class="form-group col-sm-3">
-                <label>to：<input type="date" id="date-to" class="form-control" name="date-to"></label>
+                <label>to：<input type="date" id="date_to" class="form-control" name="date_to" required></label>
 
             </div>
             <div class="form-group col-sm-2">
@@ -39,10 +40,10 @@
                     {% endfor %}
                 </select>
             </div>
-            <div class="col-sm-1" style="padding-left:50px">
-                <button id="update-btn" class="btn btn-primary">表示</button>
-            </div>
         </form>
+        <div class="col-sm-1" style="padding-left:50px">
+            <button id="update-btn" class="btn btn-primary">表示</button>
+        </div>
 
     </div>
     <canvas id="line-graph-canvas" class="chart-container" style="position: relative; width: 400px;"></canvas>

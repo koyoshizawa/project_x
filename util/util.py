@@ -24,6 +24,7 @@ class FormatDatetime(object):
 
 
 
+
 class TechnicalIndex(object):
 
     @staticmethod

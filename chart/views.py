@@ -3,6 +3,8 @@ import json
 
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.views.decorators.csrf import ensure_csrf_cookie
+
 import oandapy
 
 from util.util import FormatDatetime
@@ -18,8 +20,8 @@ def chart_select(request):
 
     template_path = 'chart/chart-select.html'
 
-    currency_pair = ['JPY/USD']
-    freq_options = ['1m', '5m', '15m', '1h']
+    currency_pair = ['USD_JPY']
+    freq_options = ['M1', 'M5', 'M15', 'H1', 'D']
 
     d = {
         'currency_pair': currency_pair,
@@ -29,6 +31,7 @@ def chart_select(request):
     return render(request, template_path, d)
 
 
+@ensure_csrf_cookie
 def get_selected_fx_data(request):
     """
     postされた条件のfx時系列データを返す
@@ -36,10 +39,10 @@ def get_selected_fx_data(request):
     :return:
     """
     # 取得した条件
-    start_date = FormatDatetime.datetime_to_str(datetime(2018, 1, 1))
-    end_date = FormatDatetime.datetime_to_str(datetime(2018, 1, 31))
-    instrument = 'USD_JPY'
-    granularity = 'D'
+    start_date = FormatDatetime.datetime_to_str(datetime.strptime(request.POST['date_from'], '%Y-%m-%d'))
+    end_date = FormatDatetime.datetime_to_str(datetime.strptime(request.POST['date_to'], '%Y-%m-%d'))
+    instrument = request.POST['instrument']
+    granularity = request.POST['granularity']
     # oanda apiで時系列fx価格データ取得
     oanda = oandapy.API(environment="practice",
                         access_token=ACCESS_TOKEN)
@@ -53,6 +56,7 @@ def get_selected_fx_data(request):
     return HttpResponse(json.dumps({'time':time_list, 'price':price_list}))
 
 from strategy.simple_bollinger_band import Agent
+
 def test_view(request):
 
     from_datetime = datetime(2010, 1, 1)
