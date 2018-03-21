@@ -15,7 +15,7 @@ class BaseAgent(object):
         self.LONG_POSITION = 1
         self.SHORT_POSITION = 2
         self.DIFF_PRICE = 0.10   #価格差30pipsで利確or損切
-        self.UNIT = 10000  # 通貨単位
+        self.UNIT = 1000  # 通貨単位
         self.from_datetime = from_datetime  # 開始日時
         self.to_datetime = to_datetime  # 終了日時
         self.granularity = granularity  # 間隔

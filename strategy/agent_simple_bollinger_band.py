@@ -1,4 +1,4 @@
-
+import pandas as pd
 from .agent_base import BaseAgent
 from util.util import TechnicalIndex
 
@@ -20,6 +20,8 @@ class Agent(BaseAgent):
 
         result = []
         time = []
+        position = []
+        price = []
 
         # bollinger_band取得
         upper_sigma, lower_sigma = TechnicalIndex.get_bollinger_band(self.data_frame['openMid'], window=25,
@@ -42,6 +44,17 @@ class Agent(BaseAgent):
 
             # 資産状態をリストに保持
             result.append(int(asset))
+            # 時間情報をリストに保持
             time.append(self.data_frame.index[i].to_pydatetime().strftime("%Y-%m-%dT%H:%M:%S.%fZ"))
+            # ポジションをリストに保持
+            position.append(have_position)
+            # rateをジスとに保持
+            price.append(rate)
 
-        return time, result, count_win, count_lose
+        data_frame = pd.DataFrame({'time': time,
+                                   'rate': price,
+                                   'asset': result,
+                                   'position': position,
+                                   'technical_index': upper_sigma})
+
+        return data_frame
